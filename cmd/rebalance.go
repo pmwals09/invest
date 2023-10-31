@@ -1,36 +1,58 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/pmwals09/invest/internal/rebalance"
 	"github.com/spf13/cobra"
 )
 
-// rebalanceCmd represents the rebalance command
+var portfolioFile string
+var targetFile string
+var rawAssets []string
+var rawAssetTargets []string
+
 var rebalanceCmd = &cobra.Command{
 	Use:   "rebalance",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Input a portfolio and desired weights, receive instructions to achieve the weighting.",
+	Long: `Input an existing asset portfolio, either with a properly-formatted file
+or with command-line flag, as well as desired weighting of those asset types and
+receive the BUY and SELL instructions required to achieve that target.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("rebalance called")
+    rebalance.RebalancePortfolio(portfolioFile, targetFile, rawAssets, rawAssetTargets)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(rebalanceCmd)
 
-	// Here you will define your flags and configuration settings.
+  rebalanceCmd.Flags().StringVarP(
+    &portfolioFile,
+    "portfolio-file",
+    "f",
+    "",
+    "Formatted portfolio file",
+  )
+  rebalanceCmd.Flags().StringArrayVarP(
+    &rawAssets,
+    "asset",
+    "a",
+    []string{},
+    "An existing asset as SYMBOL,ASSETCLASS,AMOUNT. Repeat for each asset",
+  )
+  rebalanceCmd.MarkFlagsMutuallyExclusive("portfolio-file", "asset")
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// rebalanceCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// rebalanceCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+  rebalanceCmd.Flags().StringVarP(
+    &targetFile,
+    "target-file",
+    "g",
+    "",
+    "Formatted target file",
+  )
+  rebalanceCmd.Flags().StringArrayVarP(
+    &rawAssetTargets,
+    "target",
+    "t",
+    []string{},
+    "An asset class target as ASSETCLASS,PERCENT. Repeat for each target",
+  )
+  rebalanceCmd.MarkFlagsMutuallyExclusive("target-file", "target")
 }

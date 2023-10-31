@@ -1,7 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
@@ -13,13 +9,13 @@ import (
 // statusCmd represents the status command
 var statusCmd = &cobra.Command{
 	Use:   "status",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "A high-level overview of portfolio performance",
+	Long: `Calculate some basic statistics and charts to provide a high-level
+overview of portfolio performance. Takes as input a portfolio spec or a
+portfolio history.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+The portfolio spec or portfolio history can be input as a file or as command
+line arguments.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("status called")
 	},
@@ -27,6 +23,12 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(statusCmd)
+
+  // Inputs needed:
+  // - portfolio
+  //   - parse a properly-formatted file
+  //   - parse a series of flags that contain the info needed for an asset
+  //     - Provide a utility to parse a file that may not be in the correct format
 
 	// Here you will define your flags and configuration settings.
 
